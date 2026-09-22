@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Vertical Shorts Card / Script Slate in 66dp safe zone (21 to 87) -->
+    <!-- Base vertical card with rounded corners -->
+    <path
+        android:fillColor="#FF0033"
+        android:pathData="M37,28 C34.24,28 32,30.24 32,33 L32,75 C32,77.76 34.24,80 37,80 L71,80 C73.76,80 76,77.76 76,75 L76,33 C76,30.24 73.76,28 71,28 Z" />
+    
+    <!-- White Play Triangle (YouTube Shorts style) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,42 L64,52 L48,62 Z" />
+        
+    <!-- Crisp script/text lines below play triangle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,67 L66,67 C66.55,67 67,67.45 67,68 C67,68.55 66.55,69 66,69 L42,69 C41.45,69 41,68.55 41,68 C41,67.45 41.45,67 42,67 Z" />
+    <path
+        android:fillColor="#CCFFFFFF"
+        android:pathData="M46,71 L62,71 C62.55,71 63,71.45 63,72 C63,72.55 62.55,73 62,73 L46,73 C45.45,73 45,72.55 45,72 C45,71.45 45.45,71 46,71 Z" />
+</vector>

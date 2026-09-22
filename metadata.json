@@ -1,0 +1,6 @@
+{
+  "name": "TubeMaster AI",
+  "description": "Automatize upload, SEO, agendamento e análise de vídeos no YouTube com IA. Dashboard completo, métricas de retenção e otimizador inteligente para criadores.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
