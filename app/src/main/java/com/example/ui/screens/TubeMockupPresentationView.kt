@@ -262,7 +262,10 @@ fun TubeMockupPresentationView(
                     Box(modifier = Modifier.weight(1f)) {
                         TubeUploadsScreen(
                             videos = videos,
-                            onScheduleWithAi = onScheduleWithAi
+                            onOpenAiOptimize = onOpenAiOptimizer,
+                            onOpenScheduleModal = onScheduleWithAi,
+                            onDeleteVideo = {},
+                            onUpdateVideoStatus = { _, _ -> }
                         )
                     }
                 }
@@ -311,8 +314,9 @@ fun TubeMockupPresentationView(
                     // Content
                     Box(modifier = Modifier.weight(1f)) {
                         TubeRetentionScreen(
-                            analysis = retentionAnalysis,
-                            onAiRetentionAnalysis = onOpenAiOptimizer
+                            retention = retentionAnalysis,
+                            onSelectVideo = {},
+                            onDiagnoseRetention = { _, _, _, _, _ -> }
                         )
                     }
                 }

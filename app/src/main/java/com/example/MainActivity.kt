@@ -30,6 +30,9 @@ class MainActivity : ComponentActivity() {
             val sevenDays by viewModel.tubeMasterSevenDays.collectAsStateWithLifecycle()
             val videos by viewModel.tubeMasterVideos.collectAsStateWithLifecycle()
             val retention by viewModel.tubeMasterRetention.collectAsStateWithLifecycle()
+            val comments by viewModel.tubeMasterComments.collectAsStateWithLifecycle()
+            val seoResult by viewModel.seoResult.collectAsStateWithLifecycle()
+            val isGeneratingSeo by viewModel.isGeneratingSeo.collectAsStateWithLifecycle()
             val isAiOptimizeOpen by viewModel.isAiOptimizeModalOpen.collectAsStateWithLifecycle()
             val isScheduleOpen by viewModel.isScheduleModalOpen.collectAsStateWithLifecycle()
 
@@ -42,6 +45,9 @@ class MainActivity : ComponentActivity() {
                     sevenDaysStats = sevenDays,
                     videos = videos,
                     retentionAnalysis = retention,
+                    comments = comments,
+                    seoResult = seoResult,
+                    isGeneratingSeo = isGeneratingSeo,
                     isAiOptimizeOpen = isAiOptimizeOpen,
                     isScheduleOpen = isScheduleOpen,
                     onToggleDisplayMode = { viewModel.setViewDisplayMode(it) },
@@ -52,6 +58,21 @@ class MainActivity : ComponentActivity() {
                     onCloseSchedule = { viewModel.closeScheduleModal() },
                     onScheduleVideo = { title, duration, time ->
                         viewModel.scheduleVideo(title, duration, time)
+                    },
+                    onGenerateSeo = { viewModel.generateSeo(it) },
+                    onReplyToComment = { id, text -> viewModel.replyToComment(id, text) },
+                    onGenerateAiReplies = { author, comment, onResult ->
+                        viewModel.generateCommentAiReplies(author, comment, onResult)
+                    },
+                    onToggleSpam = { viewModel.toggleCommentSpam(it) },
+                    onTogglePin = { viewModel.toggleCommentPin(it) },
+                    onDeleteComment = { viewModel.deleteComment(it) },
+                    onAddComment = { a, t, tag -> viewModel.addComment(a, t, tag) },
+                    onDeleteVideo = { viewModel.deleteVideo(it) },
+                    onUpdateVideoStatus = { id, st -> viewModel.updateVideoStatus(id, st) },
+                    onSelectRetentionVideo = { viewModel.selectRetentionVideo(it) },
+                    onDiagnoseRetention = { title, time, desc, drop, onRes ->
+                        viewModel.diagnoseRetention(title, time, desc, drop, onRes)
                     }
                 )
             }

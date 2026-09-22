@@ -16,6 +16,7 @@ import com.example.domain.model.SparklineData
 import com.example.domain.model.ThemeMode
 import com.example.domain.model.TubeMasterVideo
 import com.example.domain.model.VideoRetentionAnalysis
+import com.example.domain.model.VideoUploadStatus
 import com.example.domain.model.ViewDisplayMode
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -59,6 +60,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val tubeMasterVideos: StateFlow<List<TubeMasterVideo>> = tubeMasterRepo.uploadQueue
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    val tubeMasterComments: StateFlow<List<com.example.domain.model.CommentItem>> = tubeMasterRepo.comments
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    private val _seoResult = MutableStateFlow(geminiService.generateAlgorithmicSeoPackage("Como Crescer no YouTube"))
+    val seoResult: StateFlow<com.example.domain.model.SeoOptimizationResult> = _seoResult.asStateFlow()
+
+    private val _isGeneratingSeo = MutableStateFlow(false)
+    val isGeneratingSeo: StateFlow<Boolean> = _isGeneratingSeo.asStateFlow()
+
     val tubeMasterRetention: StateFlow<VideoRetentionAnalysis> = tubeMasterRepo.retentionAnalysis
         .stateIn(
             viewModelScope,
@@ -75,6 +85,83 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 dropMoments = emptyList()
             )
         )
+
+    fun generateSeo(topic: String) {
+        viewModelScope.launch {
+            _isGeneratingSeo.value = true
+            val result = geminiService.generateSeoPackage(topic)
+            _isGeneratingSeo.value = false
+            result.onSuccess {
+                _seoResult.value = it
+            }
+        }
+    }
+
+    fun replyToComment(commentId: String, replyText: String) {
+        tubeMasterRepo.replyToComment(commentId, replyText)
+    }
+
+    fun generateCommentAiReplies(author: String, comment: String, onResult: (List<String>) -> Unit) {
+        viewModelScope.launch {
+            val result = geminiService.generateCommentReplies(author, comment)
+            result.onSuccess { onResult(it) }
+        }
+    }
+
+    fun toggleCommentSpam(commentId: String) {
+        tubeMasterRepo.toggleCommentSpam(commentId)
+    }
+
+    fun toggleCommentPin(commentId: String) {
+        tubeMasterRepo.toggleCommentPin(commentId)
+    }
+
+    fun deleteComment(commentId: String) {
+        tubeMasterRepo.deleteComment(commentId)
+    }
+
+    fun addComment(author: String, text: String, tag: String) {
+        val newComment = com.example.domain.model.CommentItem(
+            id = "c_${System.currentTimeMillis()}",
+            author = author,
+            text = text,
+            time = "Agora",
+            tag = tag,
+            tagColor = 0xFF22C55E,
+            category = "Dúvidas",
+            likesCount = 0
+        )
+        tubeMasterRepo.addComment(newComment)
+    }
+
+    fun deleteVideo(videoId: String) {
+        tubeMasterRepo.deleteVideo(videoId)
+    }
+
+    fun updateVideoStatus(videoId: String, newStatus: VideoUploadStatus) {
+        tubeMasterRepo.updateVideoStatus(videoId, newStatus)
+    }
+
+    fun updateVideoTitle(videoId: String, newTitle: String) {
+        tubeMasterRepo.updateVideoTitle(videoId, newTitle)
+    }
+
+    fun selectRetentionVideo(videoId: String) {
+        tubeMasterRepo.selectRetentionVideo(videoId)
+    }
+
+    fun diagnoseRetention(
+        videoTitle: String,
+        timestamp: String,
+        desc: String,
+        dropPercent: Int,
+        onResult: (com.example.domain.model.RetentionDiagnostic) -> Unit
+    ) {
+        viewModelScope.launch {
+            val res = geminiService.diagnoseRetentionDrop(videoTitle, timestamp, desc, dropPercent)
+            res.onSuccess { onResult(it) }
+        }
+    }
 
     fun setViewDisplayMode(mode: ViewDisplayMode) {
         _viewDisplayMode.value = mode

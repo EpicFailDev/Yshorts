@@ -16,6 +16,81 @@ import java.io.FileOutputStream
 
 object ExportHelper {
 
+    fun copyText(context: Context, label: String, text: String) {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText(label, text)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(context, "$label copiado para a área de transferência!", Toast.LENGTH_SHORT).show()
+    }
+
+    fun exportMetadataCsv(context: Context, videos: List<com.example.domain.model.TubeMasterVideo>) {
+        try {
+            val fileName = "youtube_upload_queue_${System.currentTimeMillis()}.csv"
+            val file = File(context.cacheDir, fileName)
+            val csvBuilder = StringBuilder()
+            csvBuilder.append("ID,Title,Duration,Status,ScheduledTime,Views,Likes,Comments\n")
+            for (v in videos) {
+                val cleanTitle = v.title.replace("\"", "\"\"")
+                csvBuilder.append("\"${v.id}\",\"$cleanTitle\",\"${v.duration}\",\"${v.status.label}\",\"${v.scheduledTime}\",\"${v.viewsCount}\",\"${v.likesCount}\",\"${v.commentsCount}\"\n")
+            }
+            file.writeText(csvBuilder.toString())
+
+            val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/csv"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_SUBJECT, "Fila de Upload YouTube (CSV)")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            val chooser = Intent.createChooser(shareIntent, "Exportar Fila de Uploads (CSV)")
+            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(chooser)
+        } catch (e: Exception) {
+            Toast.makeText(context, "Erro ao exportar CSV: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    fun exportSeoPackage(context: Context, seo: com.example.domain.model.SeoOptimizationResult) {
+        try {
+            val fileName = "SEO_${sanitizeFileName(seo.topic)}.txt"
+            val file = File(context.cacheDir, fileName)
+            val content = buildString {
+                append("=== PACOTE DE SEO TUBEMASTER AI ===\n\n")
+                append("Tema: ${seo.topic}\n")
+                append("Pontuação: ${seo.seoScore}/100 (${seo.scoreBadge}) | Potencial: ${seo.potential}\n\n")
+                append("--- TÍTULOS MAGNÉTICOS RECOMENDADOS ---\n")
+                seo.suggestedTitles.forEachIndexed { i, t ->
+                    append("${i + 1}. ${t.title} [CTR Previsto: ${t.estimatedCtr} | Ângulo: ${t.angle}]\n")
+                }
+                append("\n--- TAGS PARA COLAR NO YOUTUBE STUDIO (Separadas por vírgula) ---\n")
+                append(seo.commaSeparatedTags)
+                append("\n\n--- HASHTAGS ---\n")
+                append(seo.hashtagList.joinToString(" "))
+                append("\n\n--- DESCRIÇÃO COMPLETA DE ALTA CONVERSÃO ---\n")
+                append(seo.optimizedDescription)
+                append("\n\n--- CONCEITO DE THUMBNAIL (ALTO CTR) ---\n")
+                append(seo.thumbnailVisualConcept)
+                append("\n\n--- PROMPT PARA IA DE IMAGEM (DALL-E / MIDJOURNEY / IMAGEN) ---\n")
+                append(seo.thumbnailPromptForAi)
+            }
+            file.writeText(content)
+
+            val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                putExtra(Intent.EXTRA_SUBJECT, "Pacote de SEO YouTube: ${seo.topic}")
+                putExtra(Intent.EXTRA_TEXT, content)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            val chooser = Intent.createChooser(shareIntent, "Exportar Pacote SEO (TXT)")
+            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(chooser)
+        } catch (e: Exception) {
+            Toast.makeText(context, "Erro ao exportar SEO: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+        }
+    }
+
     fun copyToClipboard(context: Context, script: ShortsScript) {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Roteiro Shorts: ${script.title}", script.toFormattedPlainText())

@@ -59,6 +59,9 @@ fun TubeMasterMainScreen(
     sevenDaysStats: List<DayViewStat>,
     videos: List<TubeMasterVideo>,
     retentionAnalysis: VideoRetentionAnalysis,
+    comments: List<com.example.domain.model.CommentItem>,
+    seoResult: com.example.domain.model.SeoOptimizationResult,
+    isGeneratingSeo: Boolean,
     isAiOptimizeOpen: Boolean,
     isScheduleOpen: Boolean,
     onToggleDisplayMode: (ViewDisplayMode) -> Unit,
@@ -68,6 +71,17 @@ fun TubeMasterMainScreen(
     onOpenSchedule: () -> Unit,
     onCloseSchedule: () -> Unit,
     onScheduleVideo: (title: String, duration: String, scheduledTime: String) -> Unit,
+    onGenerateSeo: (String) -> Unit,
+    onReplyToComment: (commentId: String, replyText: String) -> Unit,
+    onGenerateAiReplies: (author: String, comment: String, onResult: (List<String>) -> Unit) -> Unit,
+    onToggleSpam: (commentId: String) -> Unit,
+    onTogglePin: (commentId: String) -> Unit,
+    onDeleteComment: (commentId: String) -> Unit,
+    onAddComment: (author: String, text: String, tag: String) -> Unit,
+    onDeleteVideo: (String) -> Unit,
+    onUpdateVideoStatus: (String, com.example.domain.model.VideoUploadStatus) -> Unit,
+    onSelectRetentionVideo: (String) -> Unit,
+    onDiagnoseRetention: (videoTitle: String, timestamp: String, desc: String, dropPercent: Int, onResult: (com.example.domain.model.RetentionDiagnostic) -> Unit) -> Unit,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
@@ -252,8 +266,23 @@ fun TubeMasterMainScreen(
                                         sevenDaysStats = sevenDaysStats,
                                         videos = videos,
                                         retentionAnalysis = retentionAnalysis,
+                                        comments = comments,
+                                        seoResult = seoResult,
+                                        isGeneratingSeo = isGeneratingSeo,
                                         onOpenAiOptimizer = onOpenAiOptimizer,
-                                        onOpenSchedule = onOpenSchedule
+                                        onOpenSchedule = onOpenSchedule,
+                                        onScheduleVideo = onScheduleVideo,
+                                        onGenerateSeo = onGenerateSeo,
+                                        onReplyToComment = onReplyToComment,
+                                        onGenerateAiReplies = onGenerateAiReplies,
+                                        onToggleSpam = onToggleSpam,
+                                        onTogglePin = onTogglePin,
+                                        onDeleteComment = onDeleteComment,
+                                        onAddComment = onAddComment,
+                                        onDeleteVideo = onDeleteVideo,
+                                        onUpdateVideoStatus = onUpdateVideoStatus,
+                                        onSelectRetentionVideo = onSelectRetentionVideo,
+                                        onDiagnoseRetention = onDiagnoseRetention
                                     )
                                 }
                             }
@@ -266,8 +295,23 @@ fun TubeMasterMainScreen(
                                     sevenDaysStats = sevenDaysStats,
                                     videos = videos,
                                     retentionAnalysis = retentionAnalysis,
+                                    comments = comments,
+                                    seoResult = seoResult,
+                                    isGeneratingSeo = isGeneratingSeo,
                                     onOpenAiOptimizer = onOpenAiOptimizer,
-                                    onOpenSchedule = onOpenSchedule
+                                    onOpenSchedule = onOpenSchedule,
+                                    onScheduleVideo = onScheduleVideo,
+                                    onGenerateSeo = onGenerateSeo,
+                                    onReplyToComment = onReplyToComment,
+                                    onGenerateAiReplies = onGenerateAiReplies,
+                                    onToggleSpam = onToggleSpam,
+                                    onTogglePin = onTogglePin,
+                                    onDeleteComment = onDeleteComment,
+                                    onAddComment = onAddComment,
+                                    onDeleteVideo = onDeleteVideo,
+                                    onUpdateVideoStatus = onUpdateVideoStatus,
+                                    onSelectRetentionVideo = onSelectRetentionVideo,
+                                    onDiagnoseRetention = onDiagnoseRetention
                                 )
                             }
                         }
@@ -304,8 +348,23 @@ private fun RenderActiveScreen(
     sevenDaysStats: List<DayViewStat>,
     videos: List<TubeMasterVideo>,
     retentionAnalysis: VideoRetentionAnalysis,
+    comments: List<com.example.domain.model.CommentItem>,
+    seoResult: com.example.domain.model.SeoOptimizationResult,
+    isGeneratingSeo: Boolean,
     onOpenAiOptimizer: () -> Unit,
-    onOpenSchedule: () -> Unit
+    onOpenSchedule: () -> Unit,
+    onScheduleVideo: (title: String, duration: String, time: String) -> Unit,
+    onGenerateSeo: (String) -> Unit,
+    onReplyToComment: (commentId: String, replyText: String) -> Unit,
+    onGenerateAiReplies: (author: String, comment: String, onResult: (List<String>) -> Unit) -> Unit,
+    onToggleSpam: (commentId: String) -> Unit,
+    onTogglePin: (commentId: String) -> Unit,
+    onDeleteComment: (commentId: String) -> Unit,
+    onAddComment: (author: String, text: String, tag: String) -> Unit,
+    onDeleteVideo: (String) -> Unit,
+    onUpdateVideoStatus: (String, com.example.domain.model.VideoUploadStatus) -> Unit,
+    onSelectRetentionVideo: (String) -> Unit,
+    onDiagnoseRetention: (videoTitle: String, timestamp: String, desc: String, dropPercent: Int, onResult: (com.example.domain.model.RetentionDiagnostic) -> Unit) -> Unit
 ) {
     when (section) {
         NavSection.DASHBOARD -> TubeDashboardScreen(
@@ -316,19 +375,34 @@ private fun RenderActiveScreen(
         )
         NavSection.UPLOADS -> TubeUploadsScreen(
             videos = videos,
-            onScheduleWithAi = onOpenSchedule
+            onOpenAiOptimize = onOpenAiOptimizer,
+            onOpenScheduleModal = onOpenSchedule,
+            onDeleteVideo = onDeleteVideo,
+            onUpdateVideoStatus = onUpdateVideoStatus
         )
         NavSection.ANALISES -> TubeRetentionScreen(
-            analysis = retentionAnalysis,
-            onAiRetentionAnalysis = onOpenAiOptimizer
+            retention = retentionAnalysis,
+            onSelectVideo = onSelectRetentionVideo,
+            onDiagnoseRetention = onDiagnoseRetention
         )
-        NavSection.SEO -> TubeSeoScreen()
-        NavSection.COMENTARIOS -> TubeCommentsScreen()
-        NavSection.CONFIGURACOES -> TubeDashboardScreen(
-            metrics = metrics,
-            sevenDaysStats = sevenDaysStats,
-            recentVideos = videos,
-            onOpenAiOptimizer = onOpenAiOptimizer
+        NavSection.SEO -> TubeSeoScreen(
+            seoResult = seoResult,
+            isGenerating = isGeneratingSeo,
+            onGenerateSeo = onGenerateSeo,
+            onScheduleVideo = onScheduleVideo
+        )
+        NavSection.COMENTARIOS -> TubeCommentsScreen(
+            comments = comments,
+            onReplyToComment = onReplyToComment,
+            onGenerateAiReplies = onGenerateAiReplies,
+            onToggleSpam = onToggleSpam,
+            onTogglePin = onTogglePin,
+            onDeleteComment = onDeleteComment,
+            onAddComment = onAddComment
+        )
+        NavSection.CONFIGURACOES -> TubeSettingsScreen(
+            videos = videos,
+            comments = comments
         )
     }
 }
