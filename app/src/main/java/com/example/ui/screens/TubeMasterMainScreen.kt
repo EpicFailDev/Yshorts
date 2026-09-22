@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.domain.model.DayViewStat
@@ -98,7 +99,15 @@ fun TubeMasterMainScreen(
                                 selected = currentSection == NavSection.DASHBOARD,
                                 onClick = { onSelectSection(NavSection.DASHBOARD) },
                                 icon = { Icon(Icons.Default.Dashboard, contentDescription = "Dashboard", modifier = Modifier.size(20.dp)) },
-                                label = { Text("Dashboard", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)) },
+                                label = {
+                                    Text(
+                                        text = "Dashboard",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                        maxLines = 1,
+                                        softWrap = false,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                },
                                 colors = NavigationBarItemDefaults.colors(
                                     selectedIconColor = TubeMasterWhite,
                                     selectedTextColor = TubeMasterWhite,
@@ -113,7 +122,15 @@ fun TubeMasterMainScreen(
                                 selected = currentSection == NavSection.UPLOADS,
                                 onClick = { onSelectSection(NavSection.UPLOADS) },
                                 icon = { Icon(Icons.Default.CloudUpload, contentDescription = "Uploads", modifier = Modifier.size(20.dp)) },
-                                label = { Text("Uploads", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)) },
+                                label = {
+                                    Text(
+                                        text = "Uploads",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                        maxLines = 1,
+                                        softWrap = false,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                },
                                 colors = NavigationBarItemDefaults.colors(
                                     selectedIconColor = TubeMasterWhite,
                                     selectedTextColor = TubeMasterWhite,
@@ -128,7 +145,15 @@ fun TubeMasterMainScreen(
                                 selected = currentSection == NavSection.ANALISES,
                                 onClick = { onSelectSection(NavSection.ANALISES) },
                                 icon = { Icon(Icons.Default.Timeline, contentDescription = "Retenção", modifier = Modifier.size(20.dp)) },
-                                label = { Text("Retenção", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)) },
+                                label = {
+                                    Text(
+                                        text = "Retenção",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                        maxLines = 1,
+                                        softWrap = false,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                },
                                 colors = NavigationBarItemDefaults.colors(
                                     selectedIconColor = TubeMasterWhite,
                                     selectedTextColor = TubeMasterWhite,
@@ -143,7 +168,15 @@ fun TubeMasterMainScreen(
                                 selected = currentSection == NavSection.SEO,
                                 onClick = { onSelectSection(NavSection.SEO) },
                                 icon = { Icon(Icons.Default.Search, contentDescription = "SEO", modifier = Modifier.size(20.dp)) },
-                                label = { Text("SEO IA", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)) },
+                                label = {
+                                    Text(
+                                        text = "SEO IA",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                        maxLines = 1,
+                                        softWrap = false,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                },
                                 colors = NavigationBarItemDefaults.colors(
                                     selectedIconColor = TubeMasterWhite,
                                     selectedTextColor = TubeMasterWhite,
@@ -158,7 +191,15 @@ fun TubeMasterMainScreen(
                                 selected = currentSection == NavSection.COMENTARIOS,
                                 onClick = { onSelectSection(NavSection.COMENTARIOS) },
                                 icon = { Icon(Icons.AutoMirrored.Filled.Comment, contentDescription = "Comentários", modifier = Modifier.size(20.dp)) },
-                                label = { Text("Comentários", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)) },
+                                label = {
+                                    Text(
+                                        text = "Comentários",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.5.sp),
+                                        maxLines = 1,
+                                        softWrap = false,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                },
                                 colors = NavigationBarItemDefaults.colors(
                                     selectedIconColor = TubeMasterWhite,
                                     selectedTextColor = TubeMasterWhite,

@@ -27,6 +27,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -43,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.TubeMasterBg
@@ -77,7 +79,7 @@ fun TubeCommentsScreen(
             author = "Lucas Dev",
             text = "Qual software você recomenda para edição de áudio?",
             time = "Há 2 horas",
-            tag = "Pergunta Respondida por IA",
+            tag = "Respondido por IA",
             tagColor = TubeMasterGreen
         ),
         CommentItem(
@@ -119,8 +121,9 @@ fun TubeCommentsScreen(
             )
         }
 
-        TabRow(
+        ScrollableTabRow(
             selectedTabIndex = selectedTab,
+            edgePadding = 0.dp,
             containerColor = Color.Transparent,
             contentColor = TubeMasterWhite,
             indicator = { tabPositions ->
@@ -145,7 +148,9 @@ fun TubeCommentsScreen(
                                 fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 13.sp
                             ),
-                            color = if (selectedTab == index) TubeMasterWhite else TubeMasterGray
+                            color = if (selectedTab == index) TubeMasterWhite else TubeMasterGray,
+                            maxLines = 1,
+                            softWrap = false
                         )
                     }
                 )
@@ -172,7 +177,13 @@ fun TubeCommentsScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Row(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(end = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
                                 Box(
                                     modifier = Modifier
                                         .size(24.dp)
@@ -189,12 +200,15 @@ fun TubeCommentsScreen(
                                 Text(
                                     text = comment.author,
                                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                                    color = TubeMasterWhite
+                                    color = TubeMasterWhite,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                                 Text(
                                     text = comment.time,
                                     style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                                    color = TubeMasterGrayDark
+                                    color = TubeMasterGrayDark,
+                                    maxLines = 1
                                 )
                             }
 
@@ -207,7 +221,9 @@ fun TubeCommentsScreen(
                                     text = comment.tag,
                                     style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, fontWeight = FontWeight.Bold),
                                     color = comment.tagColor,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                    maxLines = 1,
+                                    softWrap = false
                                 )
                             }
                         }

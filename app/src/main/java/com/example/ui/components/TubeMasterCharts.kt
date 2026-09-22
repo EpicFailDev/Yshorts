@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.domain.model.DayViewStat
@@ -58,13 +59,15 @@ fun SparklineMetricCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
+                .padding(horizontal = 12.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = metric.title,
                 style = MaterialTheme.typography.labelMedium,
-                color = TubeMasterGray
+                color = TubeMasterGray,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -73,9 +76,12 @@ fun SparklineMetricCard(
                 text = metric.valueFormatted,
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
+                    fontSize = 18.sp
                 ),
-                color = TubeMasterWhite
+                color = TubeMasterWhite,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis
             )
 
             Spacer(modifier = Modifier.height(6.dp))
@@ -90,14 +96,15 @@ fun SparklineMetricCard(
                     Text(
                         text = metric.percentChange,
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-                        color = if (metric.isPositive) TubeMasterGreen else TubeMasterRed
+                        color = if (metric.isPositive) TubeMasterGreen else TubeMasterRed,
+                        maxLines = 1
                     )
                 }
 
                 // Mini Red Sparkline
                 Canvas(
                     modifier = Modifier
-                        .width(64.dp)
+                        .width(56.dp)
                         .height(24.dp)
                 ) {
                     val points = metric.points
@@ -261,6 +268,8 @@ fun RetentionLineChart(
                         text = abandonmentCallout,
                         style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.SemiBold),
                         color = TubeMasterRed,
+                        maxLines = 1,
+                        softWrap = false,
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                     )
                 }
@@ -275,6 +284,8 @@ fun RetentionLineChart(
                         text = peakCallout,
                         style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, fontWeight = FontWeight.SemiBold),
                         color = TubeMasterGreen,
+                        maxLines = 1,
+                        softWrap = false,
                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                     )
                 }

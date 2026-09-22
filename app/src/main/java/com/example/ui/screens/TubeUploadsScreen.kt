@@ -29,6 +29,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -47,6 +48,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.domain.model.TubeMasterVideo
@@ -67,7 +69,7 @@ fun TubeUploadsScreen(
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableStateOf(0) }
-    val tabs = listOf("Fila de Uploads", "Agendados", "Publicado 3")
+    val tabs = listOf("Fila de Uploads", "Agendados", "Publicados (3)")
 
     val filteredVideos = when (selectedTab) {
         0 -> videos
@@ -88,23 +90,31 @@ fun TubeUploadsScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 10.dp)
+            ) {
                 Text(
                     text = "Automação de Uploads",
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
+                        fontSize = 19.sp
                     ),
-                    color = TubeMasterWhite
+                    color = TubeMasterWhite,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "Deixe a IA cuidar do seu conteúdo",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TubeMasterGray
+                    color = TubeMasterGray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
-            // Button: "Agendar com IA"
+            // Button: "Agendar com IA" - properly sized, never wraps vertically
             Button(
                 onClick = onScheduleWithAi,
                 shape = RoundedCornerShape(8.dp),
@@ -112,6 +122,7 @@ fun TubeUploadsScreen(
                     containerColor = TubeMasterRed,
                     contentColor = TubeMasterWhite
                 ),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp, vertical = 8.dp),
                 modifier = Modifier.testTag("schedule_with_ai_btn")
             ) {
                 Icon(
@@ -125,14 +136,17 @@ fun TubeUploadsScreen(
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
-                    )
+                    ),
+                    maxLines = 1,
+                    softWrap = false
                 )
             }
         }
 
-        // Tabs: Fila de Uploads | Agendados | Publicado 3
-        TabRow(
+        // Tabs: Fila de Uploads | Agendados | Publicados (3)
+        ScrollableTabRow(
             selectedTabIndex = selectedTab,
+            edgePadding = 0.dp,
             containerColor = Color.Transparent,
             contentColor = TubeMasterWhite,
             indicator = { tabPositions ->
@@ -162,7 +176,9 @@ fun TubeUploadsScreen(
                                 fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 13.sp
                             ),
-                            color = if (selectedTab == index) TubeMasterWhite else TubeMasterGray
+                            color = if (selectedTab == index) TubeMasterWhite else TubeMasterGray,
+                            maxLines = 1,
+                            softWrap = false
                         )
                     }
                 )
@@ -251,7 +267,8 @@ fun UploadVideoRowItem(
                         fontSize = 12.sp
                     ),
                     color = TubeMasterWhite,
-                    maxLines = 1
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 // Status pill

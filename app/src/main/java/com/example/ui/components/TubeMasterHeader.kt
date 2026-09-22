@@ -211,7 +211,9 @@ fun TubeMasterHeroBanner(
                                 fontWeight = if (currentMode == ViewDisplayMode.FOCUSED_INTERACTIVE) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 11.sp
                             ),
-                            color = if (currentMode == ViewDisplayMode.FOCUSED_INTERACTIVE) TubeMasterWhite else TubeMasterGray
+                            color = if (currentMode == ViewDisplayMode.FOCUSED_INTERACTIVE) TubeMasterWhite else TubeMasterGray,
+                            maxLines = 1,
+                            softWrap = false
                         )
                     }
                 }
@@ -244,7 +246,9 @@ fun TubeMasterHeroBanner(
                                 fontWeight = if (currentMode == ViewDisplayMode.MOCKUP_PRESENTATION) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 11.sp
                             ),
-                            color = if (currentMode == ViewDisplayMode.MOCKUP_PRESENTATION) TubeMasterWhite else TubeMasterGray
+                            color = if (currentMode == ViewDisplayMode.MOCKUP_PRESENTATION) TubeMasterWhite else TubeMasterGray,
+                            maxLines = 1,
+                            softWrap = false
                         )
                     }
                 }

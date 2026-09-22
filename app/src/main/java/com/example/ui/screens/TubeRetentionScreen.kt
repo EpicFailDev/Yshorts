@@ -28,6 +28,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -46,6 +47,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.domain.model.DropMoment
@@ -139,7 +141,8 @@ fun TubeRetentionScreen(
                             fontSize = 12.sp
                         ),
                         color = TubeMasterWhite,
-                        maxLines = 1
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = "${analysis.duration} • ${analysis.uploadDate}",
@@ -171,9 +174,10 @@ fun TubeRetentionScreen(
             )
         }
 
-        // Tabs: Retenção | Engajamento | Público
-        TabRow(
+        // Tabs: Retenção | Engajamento | Público - smooth scrollable, never breaks words
+        ScrollableTabRow(
             selectedTabIndex = selectedTab,
+            edgePadding = 0.dp,
             containerColor = Color.Transparent,
             contentColor = TubeMasterWhite,
             indicator = { tabPositions ->
@@ -203,7 +207,9 @@ fun TubeRetentionScreen(
                                 fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 13.sp
                             ),
-                            color = if (selectedTab == index) TubeMasterWhite else TubeMasterGray
+                            color = if (selectedTab == index) TubeMasterWhite else TubeMasterGray,
+                            maxLines = 1,
+                            softWrap = false
                         )
                     }
                 )
@@ -229,7 +235,9 @@ fun TubeRetentionScreen(
                     Text(
                         text = "Taxa de retenção",
                         style = MaterialTheme.typography.labelSmall,
-                        color = TubeMasterGray
+                        color = TubeMasterGray,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -239,20 +247,25 @@ fun TubeRetentionScreen(
                             text = analysis.retentionRate,
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp
+                                fontSize = 18.sp
                             ),
-                            color = TubeMasterWhite
+                            color = TubeMasterWhite,
+                            maxLines = 1,
+                            softWrap = false,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Text(
                             text = analysis.retentionChange,
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-                            color = TubeMasterGreen
+                            color = TubeMasterGreen,
+                            maxLines = 1
                         )
                     }
                     Text(
                         text = "Média do vídeo",
                         style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                        color = TubeMasterGrayDark
+                        color = TubeMasterGrayDark,
+                        maxLines = 1
                     )
                 }
             }
@@ -271,7 +284,9 @@ fun TubeRetentionScreen(
                     Text(
                         text = "Duração média assistida",
                         style = MaterialTheme.typography.labelSmall,
-                        color = TubeMasterGray
+                        color = TubeMasterGray,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -281,16 +296,26 @@ fun TubeRetentionScreen(
                             text = analysis.avgWatchDuration,
                             style = MaterialTheme.typography.titleLarge.copy(
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp
+                                fontSize = 18.sp
                             ),
-                            color = TubeMasterWhite
+                            color = TubeMasterWhite,
+                            maxLines = 1,
+                            softWrap = false,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Text(
                             text = analysis.avgWatchChange,
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-                            color = TubeMasterGreen
+                            color = TubeMasterGreen,
+                            maxLines = 1
                         )
                     }
+                    Text(
+                        text = "Tempo por viewer",
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                        color = TubeMasterGrayDark,
+                        maxLines = 1
+                    )
                 }
             }
         }
