@@ -45,20 +45,58 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
 
+      - name: Prepare Release APKs
+        run: |
+          mkdir -p release-apks
+          cp app/build/outputs/apk/debug/app-debug.apk release-apks/TubeMaster-AI.apk
+          cp app/build/outputs/apk/debug/app-debug.apk release-apks/TubeMaster-AI-v${{ github.run_number }}.apk
+
       - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: TubeMaster-AI-Debug-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: release-apks/TubeMaster-AI.apk
           if-no-files-found: error
           retention-days: 30
 
-      - name: Publish Release with APK (on tag)
+      - name: Automatic GitHub Release (Every Commit / Workflow Dispatch)
+        if: (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) || github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v1.0.${{ github.run_number }}"
+          name: "TubeMaster AI v1.0.${{ github.run_number }}"
+          body: |
+            ## 📱 TubeMaster AI - Atualização Automática
+
+            Nova versão compilada automaticamente pelo GitHub Actions.
+
+            - **Build**: #${{ github.run_number }}
+            - **Commit**: `${{ github.sha }}`
+
+            ### ⬇️ Como Instalar no Celular:
+            1. Role até a seção **Assets** logo abaixo.
+            2. Toque em **`TubeMaster-AI.apk`** para baixar diretamente.
+            3. Abra o arquivo baixado e confirme a instalação no seu Android.
+          files: |
+            release-apks/TubeMaster-AI.apk
+            release-apks/TubeMaster-AI-v${{ github.run_number }}.apk
+          draft: false
+          prerelease: false
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Release with APK (on custom tag)
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: app/build/outputs/apk/debug/app-debug.apk
+          files: |
+            release-apks/TubeMaster-AI.apk
+            release-apks/TubeMaster-AI-v${{ github.run_number }}.apk
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
+          make_latest: true
           generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
